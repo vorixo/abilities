@@ -5,11 +5,10 @@
 #include <CoreMinimal.h>
 #include <Automatron.h>
 
-#include "TestSpec.h"
 #include "Helpers/AbilityTestActor.h"
 
 
-class FAbilityTestSpec : public FTestSpec
+class FAbilityTestSpec : public Automatron::FTestSpec
 {
 private:
 	TWeakObjectPtr<UWorld> World;

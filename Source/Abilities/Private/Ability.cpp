@@ -1,4 +1,3 @@
-
 // Copyright 2020 Splash Damage, Ltd. - All Rights Reserved.
 
 #include "Ability.h"
@@ -443,7 +442,7 @@ void UAbility::PreDestroyFromReplication()
 }
 
 #if WITH_EDITOR
-bool UAbility::CanEditChange(const UProperty* InProperty) const
+bool UAbility::CanEditChange(const FProperty* InProperty) const
 {
 	bool bCanEdit = Super::CanEditChange(InProperty);
 

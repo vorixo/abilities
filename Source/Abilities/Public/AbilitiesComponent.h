@@ -469,7 +469,8 @@ inline bool UAbilitiesComponent::HasAuthority() const
 
 inline int32 UAbilitiesComponent::GetBuffCount(const UBuff* Buff) const
 {
-	if (const auto* BuffCount = Buffs.Find(Buff))
+	UBuff* MutableBuff = const_cast<UBuff*>(Buff);
+	if (const auto* BuffCount = Buffs.Find({MutableBuff}))
 	{
 		return BuffCount->Count;
 	}

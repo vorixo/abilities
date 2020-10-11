@@ -18,11 +18,15 @@ namespace UnrealBuildTool.Rules
 				"Core",
 				"Engine",
 				"CoreUObject",
+                "EngineSettings",
                 "Automatron",
                 "Abilities"
-			});
+            });
 
-			PrivateDependencyModuleNames.AddRange(new string[]{});
+			if (Target.bBuildEditor)
+			{
+				PrivateDependencyModuleNames.Add("UnrealEd");
+			}
 		}
 	}
 }
