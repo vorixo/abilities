@@ -296,6 +296,7 @@ private:
 	void LocalStartCooldown();
 	void LocalResetCooldown();
 
+	void NotifyCooldownStarted();
 	void NotifyCooldownReady(ECooldownReadyReason Reason);
 	/** END Cooldowns */
 

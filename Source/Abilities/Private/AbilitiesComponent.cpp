@@ -222,6 +222,32 @@ bool UAbilitiesComponent::CanActivate(TSubclassOf<UAbility> Class, FStructContai
 	return false;
 }
 
+bool UAbilitiesComponent::AddRemainingCooldowns(TArray<TSubclassOf<UAbility>> Classes, float Duration)
+{
+	if(!HasAuthority())
+	{
+		return false;
+	}
+
+	TArray<UClass*> RawClasses;
+	RawClasses.Reserve(Classes.Num());
+	for(const auto& Class : Classes)
+	{
+		if(IsCoolingDown(Class.Get()))
+		{
+			RawClasses.Add(Class.Get());
+		}
+	}
+
+	if(RawClasses.Num() <= 0)
+	{
+		return false;
+	}
+
+	MCAddRemainingCooldowns(RawClasses, Duration);
+	return true;
+}
+
 bool UAbilitiesComponent::IsRunning(TSubclassOf<UAbility> Class) const
 {
 	UAbility* Ability = GetEquippedAbility(Class);
@@ -381,6 +407,33 @@ void UAbilitiesComponent::CancelAll()
 		for (auto* Ability : AllAbilities)
 		{
 			Ability->Cancel();
+		}
+	}
+}
+
+void UAbilitiesComponent::MCAddRemainingCooldowns_Implementation(const TArray<UClass*>& Classes, float Duration)
+{
+	const bool bHasAuthority = HasAuthority();
+	for(auto* Class : Classes)
+	{
+		if(Cooldowns.IsCoolingDown(Class))
+		{
+			const float Time = Cooldowns.GetRemaining(Class) + Duration;
+			if(Time > 0.f)
+			{
+				Cooldowns.TrySetRemaining(Class, Time);
+			}
+		}
+		// If Cooldown finished in a client, apply the duration
+		else if(Duration > 0.f && !bHasAuthority)
+		{
+			Cooldowns.Start(Class, Duration); // + Latency
+
+			// Notify the instance if any
+			if (UAbility* Instance = GetEquippedAbility(Class))
+			{
+				Instance->NotifyCooldownStarted();
+			}
 		}
 	}
 }

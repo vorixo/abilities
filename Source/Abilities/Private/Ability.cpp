@@ -202,8 +202,7 @@ void UAbility::LocalStartCooldown()
 	{
 		Comp->GetCooldowns().Start(GetClass(), CooldownDuration);
 
-		OnCooldownStarted();
-		EventOnCooldownStarted();
+		NotifyCooldownStarted();
 	}
 }
 
@@ -216,6 +215,12 @@ void UAbility::LocalResetCooldown()
 	{
 		NotifyCooldownReady(ECooldownReadyReason::Resseted);
 	}
+}
+
+void UAbility::NotifyCooldownStarted()
+{
+	OnCooldownStarted();
+	EventOnCooldownStarted();
 }
 
 void UAbility::NotifyCooldownReady(ECooldownReadyReason Reason)

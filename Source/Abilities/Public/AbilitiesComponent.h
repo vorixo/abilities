@@ -246,6 +246,23 @@ public:
 		return CanActivate(Class, {});
 	}
 
+	// Adds (or substracts) time from an active cooldown
+	// @param Class of the ability to apply the extra cooldown
+	// @param Duration to add or remove from the cooldown
+	// @return true if cooldown was modified
+	UFUNCTION(BlueprintCallable, Category = "AbilityComponent|Abilities|Cooldowns", BlueprintAuthorityOnly)
+	bool AddRemainingCooldown(TSubclassOf<UAbility> Class, float Duration)
+	{
+		return AddRemainingCooldowns({Class}, Duration);
+	}
+
+	// Adds (or substracts) time from multiple active cooldowns
+	// @param Classes of the abilities to apply the extra cooldown
+	// @param Duration to add or remove from the cooldown
+	// @return true if cooldowns were modified
+	UFUNCTION(BlueprintCallable, Category = "AbilityComponent|Abilities|Cooldowns", BlueprintAuthorityOnly)
+	bool AddRemainingCooldowns(TArray<TSubclassOf<UAbility>> Classes, float Duration);
+
 	// @return true if any ability of a class is executing
 	UFUNCTION(BlueprintPure, Category = "AbilityComponent|Abilities")
 	bool IsRunning(TSubclassOf<UAbility> Class) const;
@@ -265,10 +282,14 @@ public:
 	UFUNCTION()
 	void OnRep_AllAbilities();
 
+protected:
+
+	UFUNCTION(NetMulticast, Unreliable)
+	void MCAddRemainingCooldowns(const TArray<UClass*>& Classes, float Duration);
+
 private:
 
 	void InternalEquipAbility(UClass* Class);
-
 
 public:
 

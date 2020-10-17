@@ -20,16 +20,7 @@ void FAbilitiesCooldownCounter::Start(UClass* Ability, float Duration)
 	FTimerHandle& Handle = Handles.FindOrAdd(Ability);
 	GetTimerManager()->SetTimer(Handle, [this, Ability]()
 	{
-		Handles.Remove(Ability);
-
-		if (auto* Owner = GetOwner<UAbilitiesComponent>())
-		{
-			// If the ability is equipped, notify it
-			if (UAbility* Instance = Owner->GetEquippedAbility(Ability))
-			{
-				Instance->NotifyCooldownReady(ECooldownReadyReason::Finished);
-			}
-		}
+		OnReady(Ability);
 	}, Duration, false);
 }
 
@@ -64,6 +55,19 @@ float FAbilitiesCooldownCounter::GetRemaining(UClass* Ability) const
 	return 0.f;
 }
 
+bool FAbilitiesCooldownCounter::TrySetRemaining(UClass* Ability, float Duration)
+{
+	if (FTimerHandle* Handle = Handles.Find(Ability))
+	{
+		GetTimerManager()->SetTimer(*Handle, [this, Ability]()
+		{
+			OnReady(Ability);
+		}, Duration, false);
+		return true;
+	}
+	return false;
+}
+
 FTimerManager* FAbilitiesCooldownCounter::GetTimerManager() const
 {
 	if (auto* World = GetWorld())
@@ -71,4 +75,18 @@ FTimerManager* FAbilitiesCooldownCounter::GetTimerManager() const
 		return &World->GetTimerManager();
 	}
 	return nullptr;
+}
+
+void FAbilitiesCooldownCounter::OnReady(UClass* Ability)
+{
+	Handles.Remove(Ability);
+
+	if (auto* Comp = GetOwner<UAbilitiesComponent>())
+	{
+		// If the ability is equipped, notify it
+		if (UAbility* Instance = Comp->GetEquippedAbility(Ability))
+		{
+			Instance->NotifyCooldownReady(ECooldownReadyReason::Finished);
+		}
+	}
 }

@@ -32,10 +32,18 @@ public:
 	bool Reset(UClass* Ability);
 	void ResetAll();
 
+	// If in cooldown, update its remaining time.
+	// @param Ability to affect
+	// @param Duration in seconds to set the cooldown to
+	// @return false if cooldown wasn't active or didn't update.
+	bool TrySetRemaining(UClass* Ability, float Duration);
+
 	bool IsCoolingDown(UClass* Ability) const { return Handles.Contains(Ability); }
 	float GetRemaining(UClass* Ability) const;
 
 private:
 
 	FTimerManager* GetTimerManager() const;
+
+	void OnReady(UClass* Ability);
 };
