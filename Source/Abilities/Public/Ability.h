@@ -25,10 +25,14 @@ UENUM(Blueprintable)
 enum class EAbilityTickMode : uint8
 {
 	Never,
-	DuringCastOnly, // Tick only on Casting state
-	DuringActivationOnly, // Tick only on Activation state
-	DuringCastAndActivation, // Tick on Cast & Activation state. Recommended option if ticking is needed
-	Always, // Ticks when the ability is equipped (and therefore Execution as well)
+	// Tick only on Casting state
+	DuringCastOnly,
+	// Tick only on Activation state
+	DuringActivationOnly,
+	// Tick on Cast & Activation state. Recommended option if ticking is needed
+	DuringCastAndActivation,
+	// Ticks when the ability is equipped (and therefore Execution as well)
+	Always,
 };
 
 UENUM(Blueprintable)
@@ -41,18 +45,25 @@ enum class ECooldownReadyReason : uint8
 UENUM()
 enum class EAbilityCooldownMode : uint8
 {
-	OnActivation, // Starts cooldown just after activation
-	OnDeactivation, // Starts cooldown just after deactivation
-	Manual // Cooldown will start at anytime
+	// Starts cooldown just after activation
+	OnActivation,
+	// Starts cooldown just after deactivation
+	OnDeactivation,
+	// Cooldown will start at anytime
+	Manual
 };
 
 UENUM()
 enum class EAbilityInputProfile : uint8
 {
-	CastWhileHolding, // Will cast the ability when pressed, and activate it when released. If there's no cast, this be equal to "ActivateOnPress"
-	ActivateOnPress, // Will activate the ability when pressed
-	ActivateWhileHolding, // Will activate the ability when pressed, and deactivate it when released
-	ToggleActivationOnPress, // Activate when clicked, Deactivate when clicked again
+	// Will cast the ability when pressed, and activate it when released. If there's no cast, this be equal to "ActivateOnPress"
+	CastWhileHolding,
+	// Will activate the ability when pressed
+	ActivateOnPress,
+	// Will activate the ability when pressed, and deactivate it when released
+	ActivateWhileHolding,
+	// Activate when clicked, Deactivate when clicked again
+	ToggleActivationOnPress,
 	None
 };
 
