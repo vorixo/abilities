@@ -12,10 +12,14 @@ enum class EAbilityState : uint8
 {
 	None UMETA(Hidden),
 	BeforeBeginPlay UMETA(Hidden),
-	JustEquipped, // After begin play the ability will be "JustEquipped"
-	Cancelled, // If the ability canceled last time it executed
-	Succeeded,  // If the ability finished successfully last time it executed
-	Cast, // State in which the player will drag a curve or wait for some time
+	// After begin play the ability will be "JustEquipped"
+	JustEquipped,
+	// If the ability canceled last time it executed
+	Cancelled,
+	// If the ability finished successfully last time it executed
+	Succeeded,
+	// State in which the player will drag a curve or wait for some time
+	Cast,
 	Activation,
 	AfterEndPlay UMETA(Hidden)
 };
